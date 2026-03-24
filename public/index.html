@@ -8,79 +8,132 @@
   
 </head>
 <body>
-  <main class="page">
-    <section class="game-card">
-      <div class="title-wrap">
-        <p class="eyebrow">multiplayer websocket game</p>
-        <h1>🪨📄✂️ Rock Paper Scissors Party</h1>
-        <p class="subtitle">
-          Pick your move, wait for your opponent, and try to win the round.
-        </p>
+<div id="backgroundIcons">
+
+  <img src="images/rock.png" class="bg-icon rock-bg" alt="Rock">
+  <img src="images/paper.png" class="bg-icon" alt="Paper">
+  <img src="images/scissors.png" class="bg-icon" alt="Scissors">
+
+</div>
+  <main class="layout">
+
+   <aside class="side-card mascot-card">
+
+  <div class="rules-content">
+    <h2 class="side-title big-side-title">Pick Your Fighter</h2>
+
+    <div class="fighter-rule">
+      <img src="images/rock.png" class="rule-icon rock-rule" alt="Rock">
+      <div>
+        <h3>Rock</h3>
+        <p>Crushes scissors, but gets covered by paper.</p>
       </div>
+    </div>
 
-      <div class="status-pill" id="status">
-        Connecting to game...
+    <div class="fighter-rule">
+      <img src="images/paper.png" class="rule-icon" alt="Paper">
+      <div>
+        <h3>Paper</h3>
+        <p>Covers rock, but gets cut by scissors.</p>
       </div>
+    </div>
 
-      <div class="scoreboard">
-        <div class="score-box you-box">
-          <span class="score-label">You</span>
-          <span class="score-value" id="yourScore">0</span>
-        </div>
-
-        <div class="vs-badge">VS</div>
-
-        <div class="score-box opp-box">
-          <span class="score-label">Opponent</span>
-          <span class="score-value" id="opponentScore">0</span>
-        </div>
+    <div class="fighter-rule">
+      <img src="images/scissors.png" class="rule-icon" alt="Scissors">
+      <div>
+        <h3>Scissors</h3>
+        <p>Cuts paper, but gets crushed by rock.</p>
       </div>
+    </div>
+  </div>
+</aside>
 
-      <div class="choices">
-        <button class="choice-btn rock-btn" data-choice="rock">
-          <span class="emoji">🪨</span>
-          <span class="choice-name">Rock</span>
-        </button>
+    <section class="page">
+      <section class="game-card">
+        <div class="title-wrap">
+          <p class="eyebrow">multiplayer websocket game</p>
 
-        <button class="choice-btn paper-btn" data-choice="paper">
-          <span class="emoji">📄</span>
-          <span class="choice-name">Paper</span>
-        </button>
-
-        <button class="choice-btn scissors-btn" data-choice="scissors">
-          <span class="emoji">✂️</span>
-          <span class="choice-name">Scissors</span>
-        </button>
-      </div>
-
-      <section class="results-card">
-        <div class="result-row">
-          <div class="mini-card">
-            <p class="mini-label">Your choice</p>
-            <p class="mini-value" id="yourChoice">—</p>
+          <div class="title-icons">
+            <img src="images/rock.png" class="title-icon rock-title" alt="Rock">
+            <img src="images/paper.png" class="title-icon" alt="Paper">
+            <img src="images/scissors.png" class="title-icon" alt="Scissors">
           </div>
 
-          <div class="mini-card">
-            <p class="mini-label">Opponent choice</p>
-            <p class="mini-value" id="opponentChoice">—</p>
+          <h1 class="game-title">
+            Rock Paper Scissors Party
+          </h1>
+
+          <p class="subtitle">
+            Pick your move, wait for your opponent, and try to win the round.
+          </p>
+        </div>
+
+        <div class="status-pill" id="status">
+          Connecting to game...
+        </div>
+
+        <div class="scoreboard">
+          <div class="score-box you-box">
+            <span class="score-label">You</span>
+            <span class="score-value" id="yourScore">0</span>
+          </div>
+
+          <div class="vs-badge">VS</div>
+
+          <div class="score-box opp-box">
+            <span class="score-label">Opponent</span>
+            <span class="score-value" id="opponentScore">0</span>
           </div>
         </div>
 
-        <div class="big-result" id="result">
-          Pick your move!
-        </div>
-      </section>
+        <div class="choices">
+          <button class="choice-btn rock-btn" data-choice="rock">
+            <img src="images/rock.png" alt="Rock" class="choice-image" />
+            <span class="choice-name">Rock</span>
+          </button>
 
-      <section class="tips-card">
-        <h2>How it works</h2>
-        <ul>
-          <li>Open the game in two browser windows to test it.</li>
-          <li>Wait for another player to connect.</li>
-          <li>Choose rock, paper, or scissors.</li>
-          <li>Results appear when both players have chosen.</li>
-        </ul>
+          <button class="choice-btn paper-btn" data-choice="paper">
+            <img src="images/paper.png" alt="Paper" class="choice-image" />
+            <span class="choice-name">Paper</span>
+          </button>
+
+          <button class="choice-btn scissors-btn" data-choice="scissors">
+            <img src="images/scissors.png" alt="Scissors" class="choice-image" />
+            <span class="choice-name">Scissors</span>
+          </button>
+        </div>
+
+        <section class="results-card">
+          <div class="result-row">
+            <div class="mini-card">
+              <p class="mini-label">Your choice</p>
+              <p class="mini-value" id="yourChoice">—</p>
+            </div>
+
+            <div class="mini-card">
+              <p class="mini-label">Opponent choice</p>
+              <p class="mini-value" id="opponentChoice">—</p>
+            </div>
+          </div>
+
+          <div class="big-result" id="result">
+            Pick your move!
+          </div>
+        </section>
       </section>
     </section>
+
+   <aside class="side-card how-card">
+   <h2 class="side-title big-side-title">How to play:</h2>
+  <ul class="how-list">
+    <li>Open the game in two browser windows or on two devices.</li>
+    <li>Wait for both players to connect to the match.</li>
+    <li>Choose rock, paper, or scissors for each round.</li>
+    <li>The server compares both choices and updates the score live.</li>
+    <li>Keep playing and see who takes the lead.</li>
+  </ul>
+</aside>
+
   </main>
 
   <script src="script.js"></script>

@@ -15,6 +15,73 @@ let hasChosenThisRound = false;
 const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
 const socket = new WebSocket(`${protocol}//${window.location.host}`);
 
+
+const bgContainer = document.getElementById("backgroundIcons");
+const bgIcons = document.querySelectorAll(".bg-icon");
+
+if (bgContainer && bgIcons.length > 0) {
+
+  const states = [];
+
+  bgIcons.forEach(icon => {
+
+    states.push({
+      element: icon,
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+
+      dx:
+        (Math.random() * 1.5 + 0.5) *
+        (Math.random() < 0.5 ? -1 : 1),
+
+      dy:
+        (Math.random() * 1.5 + 0.5) *
+        (Math.random() < 0.5 ? -1 : 1)
+    });
+
+  });
+
+  function animateBackgroundIcons() {
+
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    states.forEach(state => {
+
+      const icon = state.element;
+
+      const iconWidth = icon.offsetWidth;
+      const iconHeight = icon.offsetHeight;
+
+      state.x += state.dx;
+      state.y += state.dy;
+
+      if (
+        state.x <= 0 ||
+        state.x + iconWidth >= width
+      ) {
+        state.dx *= -1;
+      }
+
+      if (
+        state.y <= 0 ||
+        state.y + iconHeight >= height
+      ) {
+        state.dy *= -1;
+      }
+
+      icon.style.transform =
+        `translate(${state.x}px, ${state.y}px)`;
+
+    });
+
+    requestAnimationFrame(animateBackgroundIcons);
+
+  }
+
+  animateBackgroundIcons();
+
+}
 function setStatus(message) {
   statusText.textContent = message;
 }
@@ -107,11 +174,11 @@ socket.addEventListener("message", (event) => {
     updateScores();
 
     if (data.result.toLowerCase().includes("win")) {
-      setResult(`You win round ${data.round}! 🎉`, "win-text");
+      setResult(`You win round ${data.round}! `, "win-text");
     } else if (data.result.toLowerCase().includes("lose")) {
-      setResult(`You lose round ${data.round}! 😵`, "lose-text");
+      setResult(`You lose round ${data.round}! `, "lose-text");
     } else {
-      setResult(`Round ${data.round} is a draw! ✨`, "draw-text");
+      setResult(`Round ${data.round} is a draw! `, "draw-text");
     }
 
     hasChosenThisRound = false;

@@ -15,6 +15,99 @@
   --white: #ffffff;
 }
 
+
+/* Whole page layout */
+
+.layout {
+  width: 100%;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 400px minmax(320px, 700px) 400px;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  padding: 24px;
+}
+
+/* Center game area */
+
+.page {
+  width: 100%;
+}
+
+/* Side boxes */
+
+.side-card {
+  background: var(--white);
+  border: 4px solid var(--shadow);
+  border-radius: 26px;
+  padding: 18px 16px;
+  box-shadow: 0 8px 0 var(--shadow);
+  min-height: 240px;
+    
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.side-title {
+  text-align: center;
+  font-size: 1.1rem;
+  margin-bottom: 14px;
+  color: var(--pink-dark);
+}
+
+/* Left icon box */
+
+.mascot-card {
+  background: #fff9f2;
+}
+.mascot-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 420px;
+}
+
+.rules-content {
+  position: relative;
+  z-index: 2;
+}
+
+.floating-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+}
+
+
+
+.side-title {
+  text-align: center;
+  color: var(--pink-dark);
+  position: relative;
+  z-index: 2;
+}
+
+.big-side-title {
+  font-size: 1.6rem;
+  margin-bottom: 18px;
+}
+
+.fighter-rule {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 3px solid var(--shadow);
+  border-radius: 20px;
+  padding: 12px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 0 var(--shadow);
+}
+/* Background bouncing icons container */
+
 body {
   margin: 0;
   font-family: "Trebuchet MS", "Comic Sans MS", Arial, sans-serif;
@@ -24,6 +117,156 @@ body {
     linear-gradient(180deg, #fff7d8 0%, #ffd9e8 100%);
   color: var(--ink);
   min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  overflow: hidden;
+}
+
+#backgroundIcons {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bg-icon {
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
+  
+}
+
+.rock-bg {
+  width: 300px;
+  height: 300px;
+}
+
+.layout {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 400px minmax(320px, 700px) 400px;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  padding: 24px;
+}
+
+.page {
+  width: 100%;
+}
+.rule-icon {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.rock-rule {
+  width: 72px;
+  height: 72px;
+}
+
+.fighter-rule h3 {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.fighter-rule p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: #5d4a52;
+}
+
+.bouncy-icons {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  overflow: hidden;
+}
+
+.moving-icon {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+}
+.rock-moving{
+    width: 180px;
+    height: 180px;
+}
+.side-icon {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+/* Bounce loop */
+
+.bounce {
+  animation: bounceLoop 1.8s infinite ease-in-out;
+}
+
+.bounce-1 {
+  animation-delay: 0s;
+}
+
+.bounce-2 {
+  animation-delay: 0.2s;
+}
+
+.bounce-3 {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounceLoop {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Right how-it-works box */
+
+.how-card {
+  background: #fffdf7;
+}
+
+.how-list {
+  padding-left: 18px;
+  line-height: 1.7;
+  color: #5d4a52;
+}
+
+.how-list li + li {
+  margin-top: 10px;
+}
+
+/* Responsive */
+
+@media (max-width: 1100px) {
+  .layout {
+    grid-template-columns: 1fr;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .side-card {
+    min-height: auto;
+  }
+
+  .bouncy-icons {
+    flex-direction: row;
+    justify-content: center;
+  }
 }
 
 .page {
@@ -47,6 +290,38 @@ body {
 .title-wrap {
   text-align: center;
   margin-bottom: 20px;
+}
+.game-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.title-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+
+  margin-bottom: 6px;
+}
+
+
+.title-icon {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+
+.rock-title {
+  width: 70px;
+  height: 70px;
+}
+
+.title-icon:hover {
+  transform: rotate(-8deg) scale(1.1);
 }
 
 .eyebrow {
@@ -144,7 +419,7 @@ h1 {
 .choice-btn {
   border: 4px solid var(--shadow);
   border-radius: 28px;
-  padding: 22px 14px;
+  padding: 18px 14px;
   background: var(--white);
   cursor: pointer;
   box-shadow: 0 10px 0 var(--shadow);
@@ -152,8 +427,9 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  min-height: 145px;
+  justify-content: center;
+  gap: 10px;
+  min-height: 160px;
 }
 
 .choice-btn:hover {
@@ -182,14 +458,23 @@ h1 {
 .scissors-btn {
   background: var(--pink);
 }
-
+.choice-image {
+  width: 130px;
+  height: 130px;
+  object-fit: contain;
+  display: block;
+}
+.rock-btn .choice-image {
+  width: 150px;
+  height: 150px;
+}
 .emoji {
   font-size: 2.5rem;
   line-height: 1;
 }
 
 .choice-name {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: bold;
   color: var(--ink);
 }
