@@ -9,24 +9,10 @@ This project demonstrates real-time communication between clients and a server, 
 
 ## 🎮 Live Demo
 
+https://multiplayer-rock-paper-scissors-1-j75x.onrender.com
 
-
----
-
-## 📸 Screenshots
-
-Create a folder called:
-
-screenshots
-
-
-
-![Game Screen](screenshots/game-screen.png)  
-![Match In Progress](screenshots/match-in-progress.png)  
-![Scoreboard](screenshots/scoreboard.png)
-
-Recommended screenshots:
-
+Note: The game runs on a free hosting tier. 
+If the server has been inactive, the first request may take up to 60 seconds to load.
 ---
 
 ## 🚀 Features
@@ -93,7 +79,6 @@ multiplayer-rock-paper-scissors
 │   ├── style.css  
 │   └── script.js  
 
-└── screenshots  
 
 ---
 
@@ -201,35 +186,19 @@ Then play against yourself.
 
 ---
 
-## 🌍 Deployment
-
-This project can be deployed using:
-
-- Render
-- Railway
-- Fly.io
-
-The server runs online, allowing players from anywhere in the world to connect.
-
----
-
 ## 💡 Future Improvements
 
 - Player names
-- Room codes
-- Match history
 - Sound effects
 - Animations
 - First-to-5 win mode
 - Rematch button
-- Leaderboard
-- Multiple game rooms
 
 ---
 
 ## 🧑‍💻 Author
 
-Your Name
+Veeasha Packirisamy
 
 ---
 
