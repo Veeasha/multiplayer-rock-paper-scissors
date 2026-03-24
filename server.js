@@ -9,7 +9,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-app.use(express.static(path.join(process.cwd(), "public")));
+app.use("/images", express.static(path.join(__dirname, "public/images")));
+app.use("/css", express.static(path.join(__dirname, "public")));
+app.use("/js", express.static(path.join(__dirname, "public")));
+
+
 
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
