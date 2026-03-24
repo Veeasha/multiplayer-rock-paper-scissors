@@ -1,26 +1,33 @@
 import express from "express";
 import http from "http";
-import { WebSocketServer, WebSocket } from "ws";
+import { WebSocketServer } from "ws";
 import path from "path";
 import { fileURLToPath } from "url";
-
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
+// -------------------------
+// Serve static assets
+// -------------------------
+app.use(express.static(path.join(__dirname, "public"))); // ✅ serves CSS, JS, images
+
+// Catch-all for SPA routes
 app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
+// -------------------------
+// WebSocket Game Logic
+// -------------------------
 let waitingPlayer = null;
 
 function send(ws, data) {
-  if (ws.readyState === WebSocket.OPEN) {
+  if (ws.readyState === ws.OPEN) {
     ws.send(JSON.stringify(data));
   }
 }
@@ -32,34 +39,21 @@ function getWinner(choice1, choice2) {
     (choice1 === "rock" && choice2 === "scissors") ||
     (choice1 === "paper" && choice2 === "rock") ||
     (choice1 === "scissors" && choice2 === "paper")
-  ) {
-    return "player1";
-  }
+  ) return "player1";
 
   return "player2";
 }
 
 function createGame(player1, player2) {
-  const game = {
-    player1,
-    player2,
-    score1: 0,
-    score2: 0,
-    round: 1
-  };
-
+  const game = { player1, player2, score1: 0, score2: 0, round: 1 };
   player1.game = game;
   player2.game = game;
-
   player1.role = "player1";
   player2.role = "player2";
-
   player1.opponent = player2;
   player2.opponent = player1;
-
   player1.playerChoice = null;
   player2.playerChoice = null;
-
   return game;
 }
 
@@ -68,72 +62,50 @@ function sendScoreUpdate(game) {
     type: "scoreUpdate",
     yourScore: game.score1,
     opponentScore: game.score2,
-    round: game.round
+    round: game.round,
   });
-
   send(game.player2, {
     type: "scoreUpdate",
     yourScore: game.score2,
     opponentScore: game.score1,
-    round: game.round
+    round: game.round,
   });
 }
 
 wss.on("connection", (ws) => {
   console.log("A player connected.");
-
   ws.playerChoice = null;
   ws.opponent = null;
   ws.game = null;
   ws.role = null;
 
-  if (waitingPlayer === null) {
+  if (!waitingPlayer) {
     waitingPlayer = ws;
-
-    send(ws, {
-      type: "status",
-      message: "Waiting for another player..."
-    });
+    send(ws, { type: "status", message: "Waiting for another player..." });
   } else {
     const player1 = waitingPlayer;
     const player2 = ws;
-
     waitingPlayer = null;
 
     const game = createGame(player1, player2);
 
-    send(player1, {
-      type: "status",
-      message: "Opponent connected! Make your choice."
-    });
-
-    send(player2, {
-      type: "status",
-      message: "Connected! Make your choice."
-    });
+    send(player1, { type: "status", message: "Opponent connected! Make your choice." });
+    send(player2, { type: "status", message: "Connected! Make your choice." });
 
     sendScoreUpdate(game);
   }
 
   ws.on("message", (message) => {
     let data;
-
     try {
       data = JSON.parse(message.toString());
-    } catch (error) {
-      console.log("Invalid message received.");
-      return;
+    } catch {
+      return console.log("Invalid message received.");
     }
 
-    if (data.type === "choice") {
-      if (!ws.game) return;
-
+    if (data.type === "choice" && ws.game) {
       ws.playerChoice = data.choice;
-
-      send(ws, {
-        type: "status",
-        message: `You chose ${data.choice}. Waiting for opponent...`
-      });
+      send(ws, { type: "status", message: `You chose ${data.choice}. Waiting for opponent...` });
 
       const opponent = ws.opponent;
       const game = ws.game;
@@ -141,16 +113,11 @@ wss.on("connection", (ws) => {
       if (opponent && opponent.playerChoice) {
         const player1 = game.player1;
         const player2 = game.player2;
-
         const winner = getWinner(player1.playerChoice, player2.playerChoice);
 
-        let result1 = "";
-        let result2 = "";
-
-        if (winner === "draw") {
-          result1 = "It's a draw!";
-          result2 = "It's a draw!";
-        } else if (winner === "player1") {
+        let result1, result2;
+        if (winner === "draw") result1 = result2 = "It's a draw!";
+        else if (winner === "player1") {
           result1 = "You win!";
           result2 = "You lose!";
           game.score1 += 1;
@@ -167,9 +134,8 @@ wss.on("connection", (ws) => {
           result: result1,
           yourScore: game.score1,
           opponentScore: game.score2,
-          round: game.round
+          round: game.round,
         });
-
         send(player2, {
           type: "result",
           yourChoice: player2.playerChoice,
@@ -177,11 +143,10 @@ wss.on("connection", (ws) => {
           result: result2,
           yourScore: game.score2,
           opponentScore: game.score1,
-          round: game.round
+          round: game.round,
         });
 
-        player1.playerChoice = null;
-        player2.playerChoice = null;
+        player1.playerChoice = player2.playerChoice = null;
         game.round += 1;
       }
     }
@@ -189,41 +154,29 @@ wss.on("connection", (ws) => {
 
   ws.on("close", () => {
     console.log("A player disconnected.");
-
-    if (waitingPlayer === ws) {
-      waitingPlayer = null;
-    }
+    if (waitingPlayer === ws) waitingPlayer = null;
 
     const opponent = ws.opponent;
     const game = ws.game;
 
-    if (opponent && opponent.readyState === WebSocket.OPEN) {
+    if (opponent && opponent.readyState === ws.OPEN) {
       opponent.opponent = null;
       opponent.playerChoice = null;
       opponent.game = null;
       opponent.role = null;
 
-      send(opponent, {
-        type: "status",
-        message: "Opponent disconnected. Waiting for a new player..."
-      });
-
-      send(opponent, {
-        type: "resetScores"
-      });
+      send(opponent, { type: "status", message: "Opponent disconnected. Waiting for a new player..." });
+      send(opponent, { type: "resetScores" });
 
       waitingPlayer = opponent;
     }
 
-    if (game) {
-      ws.game = null;
-      ws.role = null;
-    }
+    if (game) ws.game = ws.role = null;
   });
 });
 
+// -------------------------
+// Start Server
+// -------------------------
 const PORT = process.env.PORT || 3000;
-
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
