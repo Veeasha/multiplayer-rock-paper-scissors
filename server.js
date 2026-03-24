@@ -12,7 +12,7 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.resolve("public")));
 
 let waitingPlayer = null;
 
