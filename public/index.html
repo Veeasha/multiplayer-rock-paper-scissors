@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rock Paper Scissors Party</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="game-card">
+      <div class="title-wrap">
+        <p class="eyebrow">multiplayer websocket game</p>
+        <h1>🪨📄✂️ Rock Paper Scissors Party</h1>
+        <p class="subtitle">
+          Pick your move, wait for your opponent, and try to win the round.
+        </p>
+      </div>
+
+      <div class="status-pill" id="status">
+        Connecting to game...
+      </div>
+
+      <div class="scoreboard">
+        <div class="score-box you-box">
+          <span class="score-label">You</span>
+          <span class="score-value" id="yourScore">0</span>
+        </div>
+
+        <div class="vs-badge">VS</div>
+
+        <div class="score-box opp-box">
+          <span class="score-label">Opponent</span>
+          <span class="score-value" id="opponentScore">0</span>
+        </div>
+      </div>
+
+      <div class="choices">
+        <button class="choice-btn rock-btn" data-choice="rock">
+          <span class="emoji">🪨</span>
+          <span class="choice-name">Rock</span>
+        </button>
+
+        <button class="choice-btn paper-btn" data-choice="paper">
+          <span class="emoji">📄</span>
+          <span class="choice-name">Paper</span>
+        </button>
+
+        <button class="choice-btn scissors-btn" data-choice="scissors">
+          <span class="emoji">✂️</span>
+          <span class="choice-name">Scissors</span>
+        </button>
+      </div>
+
+      <section class="results-card">
+        <div class="result-row">
+          <div class="mini-card">
+            <p class="mini-label">Your choice</p>
+            <p class="mini-value" id="yourChoice">—</p>
+          </div>
+
+          <div class="mini-card">
+            <p class="mini-label">Opponent choice</p>
+            <p class="mini-value" id="opponentChoice">—</p>
+          </div>
+        </div>
+
+        <div class="big-result" id="result">
+          Pick your move!
+        </div>
+      </section>
+
+      <section class="tips-card">
+        <h2>How it works</h2>
+        <ul>
+          <li>Open the game in two browser windows to test it.</li>
+          <li>Wait for another player to connect.</li>
+          <li>Choose rock, paper, or scissors.</li>
+          <li>Results appear when both players have chosen.</li>
+        </ul>
+      </section>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
