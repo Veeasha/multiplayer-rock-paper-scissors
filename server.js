@@ -9,16 +9,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-app.use("/images", express.static(path.join(__dirname, "public/images")));
-app.use("/css", express.static(path.join(__dirname, "public")));
-app.use("/js", express.static(path.join(__dirname, "public")));
-
-
 
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
-
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 let waitingPlayer = null;
 
@@ -27,9 +24,7 @@ function send(ws, data) {
     ws.send(JSON.stringify(data));
   }
 }
-app.get(/.*/, (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
+
 function getWinner(choice1, choice2) {
   if (choice1 === choice2) return "draw";
 
