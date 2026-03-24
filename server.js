@@ -27,7 +27,9 @@ function send(ws, data) {
     ws.send(JSON.stringify(data));
   }
 }
-
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 function getWinner(choice1, choice2) {
   if (choice1 === choice2) return "draw";
 
