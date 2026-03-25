@@ -15,73 +15,96 @@ let hasChosenThisRound = false;
 const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
 const socket = new WebSocket(`${protocol}//${window.location.host}`);
 
+/** Logical size (px) of #backgroundIcons before its scale(); kept in sync in fitScale(). */
+let bgBounceW = 0;
+let bgBounceH = 0;
 
 const bgContainer = document.getElementById("backgroundIcons");
 const bgIcons = document.querySelectorAll(".bg-icon");
 
 if (bgContainer && bgIcons.length > 0) {
-
   const states = [];
 
-  bgIcons.forEach(icon => {
+  const bounds = () => {
+    const w =
+      bgBounceW > 0
+        ? bgBounceW
+        : bgContainer.clientWidth || window.innerWidth;
+    const h =
+      bgBounceH > 0
+        ? bgBounceH
+        : bgContainer.clientHeight || window.innerHeight;
+    return { w, h };
+  };
+
+  const iconSize = (icon) => {
+    let iw = icon.offsetWidth;
+    let ih = icon.offsetHeight;
+    if (!iw || !ih) {
+      const cs = getComputedStyle(icon);
+      iw = parseFloat(cs.width) || 250;
+      ih = parseFloat(cs.height) || 250;
+    }
+    return { iw, ih };
+  };
+
+  bgIcons.forEach((icon) => {
+    const { w, h } = bounds();
+    const { iw, ih } = iconSize(icon);
+    const maxX = Math.max(0, w - iw);
+    const maxY = Math.max(0, h - ih);
 
     states.push({
       element: icon,
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-
+      x: Math.random() * maxX,
+      y: Math.random() * maxY,
       dx:
         (Math.random() * 1.5 + 0.5) *
         (Math.random() < 0.5 ? -1 : 1),
-
       dy:
         (Math.random() * 1.5 + 0.5) *
-        (Math.random() < 0.5 ? -1 : 1)
+        (Math.random() < 0.5 ? -1 : 1),
     });
-
   });
 
   function animateBackgroundIcons() {
+    const { w: width, h: height } = bounds();
 
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-
-    states.forEach(state => {
-
+    states.forEach((state) => {
       const icon = state.element;
+      const { iw: iconWidth, ih: iconHeight } = iconSize(icon);
 
-      const iconWidth = icon.offsetWidth;
-      const iconHeight = icon.offsetHeight;
+      const maxX = Math.max(0, width - iconWidth);
+      const maxY = Math.max(0, height - iconHeight);
 
       state.x += state.dx;
       state.y += state.dy;
 
-      if (
-        state.x <= 0 ||
-        state.x + iconWidth >= width
-      ) {
+      if (state.x < 0) {
+        state.x = 0;
+        state.dx *= -1;
+      } else if (state.x > maxX) {
+        state.x = maxX;
         state.dx *= -1;
       }
 
-      if (
-        state.y <= 0 ||
-        state.y + iconHeight >= height
-      ) {
+      if (state.y < 0) {
+        state.y = 0;
+        state.dy *= -1;
+      } else if (state.y > maxY) {
+        state.y = maxY;
         state.dy *= -1;
       }
 
-      icon.style.transform =
-        `translate(${state.x}px, ${state.y}px)`;
-
+      icon.style.transform = `translate(${state.x}px, ${state.y}px)`;
     });
 
     requestAnimationFrame(animateBackgroundIcons);
-
   }
 
   animateBackgroundIcons();
-
 }
+
 function setStatus(message) {
   statusText.textContent = message;
 }
@@ -214,7 +237,7 @@ choiceButtons.forEach((button) => {
     socket.send(
       JSON.stringify({
         type: "choice",
-        choice: choice
+        choice: choice,
       })
     );
 
@@ -229,24 +252,47 @@ choiceButtons.forEach((button) => {
 
 function fitScale() {
   const surface = document.querySelector(".scale-surface");
-  if (!surface) return;
-
-  surface.style.transform = "none";
+  const bg = document.getElementById("backgroundIcons");
   const pad = 16;
   const vw = window.visualViewport?.width ?? window.innerWidth;
   const vh = window.visualViewport?.height ?? window.innerHeight;
+
+  if (!surface) {
+    if (bg) {
+      bg.style.transform = "";
+      bg.style.width = "";
+      bg.style.height = "";
+      bgBounceW = vw;
+      bgBounceH = vh;
+    }
+    return;
+  }
+
+  surface.style.transform = "none";
   const w = surface.scrollWidth;
   const h = surface.scrollHeight;
   if (!w || !h) return;
 
   const s = Math.min((vw - pad) / w, (vh - pad) / h, 1);
   surface.style.transform = `scale(${s})`;
+
+  if (bg && s > 0) {
+    const lw = vw / s;
+    const lh = vh / s;
+    bg.style.transformOrigin = "top left";
+    bg.style.width = `${lw}px`;
+    bg.style.height = `${lh}px`;
+    bg.style.transform = `scale(${s})`;
+    bgBounceW = lw;
+    bgBounceH = lh;
+  }
 }
 
 window.addEventListener("load", () => requestAnimationFrame(fitScale));
 window.addEventListener("resize", fitScale);
 window.visualViewport?.addEventListener("resize", fitScale);
 document.fonts?.ready?.then(fitScale).catch(() => {});
+requestAnimationFrame(fitScale);
 
 updateScores();
 setButtonsDisabled(true);

@@ -41,13 +41,14 @@ html {
 /* Side boxes */
 
 .side-card {
-  background: var(--white);
+  background: rgba(255, 255, 255, 0.42);
   border: 4px solid var(--shadow);
   border-radius: 26px;
   padding: 18px 16px;
   box-shadow: 0 8px 0 var(--shadow);
   min-height: 240px;
-    
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -63,12 +64,10 @@ html {
 /* Left icon box */
 
 .mascot-card {
-  background: #fff9f2;
-}
-.mascot-card {
   position: relative;
   overflow: hidden;
   min-height: 420px;
+  background: rgba(255, 249, 242, 0.45);
 }
 
 .rules-content {
@@ -102,12 +101,14 @@ html {
   display: flex;
   align-items: center;
   gap: 14px;
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.38);
   border: 3px solid var(--shadow);
   border-radius: 20px;
   padding: 12px;
   margin-bottom: 14px;
   box-shadow: 0 4px 0 var(--shadow);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 /* Background bouncing icons container */
 
@@ -153,7 +154,11 @@ body {
 
 #backgroundIcons {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   z-index: 1;
   pointer-events: none;
   overflow: hidden;
@@ -265,7 +270,7 @@ body {
 /* Right how-it-works box */
 
 .how-card {
-  background: #fffdf7;
+  background: rgba(255, 253, 247, 0.42);
 }
 
 .how-list {
