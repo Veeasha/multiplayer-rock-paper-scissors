@@ -227,5 +227,26 @@ choiceButtons.forEach((button) => {
   });
 });
 
+function fitScale() {
+  const surface = document.querySelector(".scale-surface");
+  if (!surface) return;
+
+  surface.style.transform = "none";
+  const pad = 16;
+  const vw = window.visualViewport?.width ?? window.innerWidth;
+  const vh = window.visualViewport?.height ?? window.innerHeight;
+  const w = surface.scrollWidth;
+  const h = surface.scrollHeight;
+  if (!w || !h) return;
+
+  const s = Math.min((vw - pad) / w, (vh - pad) / h, 1);
+  surface.style.transform = `scale(${s})`;
+}
+
+window.addEventListener("load", () => requestAnimationFrame(fitScale));
+window.addEventListener("resize", fitScale);
+window.visualViewport?.addEventListener("resize", fitScale);
+document.fonts?.ready?.then(fitScale).catch(() => {});
+
 updateScores();
 setButtonsDisabled(true);
